@@ -18,16 +18,32 @@ public class ValidateHeader
 
     @Test (priority = 1)
     public void VisitGoogle() {
-        webDriver.get("http://localhost:8090/shoppingcart/#/home");
+        webDriver.get("http://www.google.nl");
     }
 
     @Test (priority = 2)
-    public void ValidateHeader() {
+    public void SearchOn() {
 
         try {
-            WebElement webdriver = webDriver.findElement(By.xpath("//*[@id=\'mainSection\']/ng-view/header/h11"));
-            Assert.assertEquals(webdriver.getText(), "ShoppingCart Applications");
+            WebElement inputField = webDriver.findElement(By.xpath("//input[@title='Zoeken']"));
+            Assert.assertTrue(inputField.isDisplayed());
+            inputField.sendKeys("Alten Nederland");
+
+            WebElement searchButton = webDriver.findElement(By.xpath("//input[@value='Google zoeken']"));
+            searchButton.click();
+            Thread.sleep(3000);
         }catch (Exception i) {
+            Assert.fail("The error message is " + i);
+        }
+    }
+
+    @Test (priority = 3)
+    public void ValidateAltenNederland() {
+        try {
+            WebElement searchResult = webDriver.findElement(By.xpath("//h3[text()='Home - ALTEN Netherlands']"));
+            Assert.assertEquals(searchResult.getText(), "Home - Alten Netherlands");
+            Thread.sleep(1000);
+        } catch(Exception i) {
             Assert.fail("The error message is " + i);
         }
     }
